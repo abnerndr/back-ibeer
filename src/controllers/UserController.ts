@@ -1,9 +1,7 @@
 import { Request, Response } from 'express'
 import { BadRequestError } from '../helpers/api-erros'
 import { userRepository } from '../repositories/userRepository'
-import { sendEmail } from '../utils/sendEmail'
 import bcrypt from 'bcrypt'
-import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 
 export class UserController {
