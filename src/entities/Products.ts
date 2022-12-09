@@ -1,45 +1,43 @@
-import { Products } from "./Products";
 import {
   Column,
   CreateDateColumn,
   Entity,
   Generated,
   JoinTable,
-  ManyToOne,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Company } from "./Company";
 
-@Entity("companies")
-export class Company {
+@Entity("products")
+export class Products {
   @PrimaryGeneratedColumn()
   @Generated("uuid")
   public id: string;
 
   @Column({ type: "text" })
-  public name: string;
-
-  @Column({ type: "text", unique: true })
-  public email: string;
-
-  @Column({ type: "text", select: false })
-  public password: string;
-
-  @Column({ type: "text", unique: true })
-  public document: string;
-
-  @Column({ type: "text" })
-  public cellphone: string;
+  public product_name: string;
 
   @Column({ type: "text" })
   public description: string;
 
-  @ManyToOne(() => Products)
-  @JoinTable()
-  public products: Products[];
-
   @Column({ type: "text" })
-  public roles: string[3];
+  public photo_url: string;
+
+  @Column({ type: "simple-array" })
+  public categories: string[];
+
+  @OneToMany(() => Company, (company) => company.id)
+  @JoinTable()
+  public company: Company[];
+
+  @Column({ type: "int" })
+  public price_in_cents: number;
+
+  @Column({ type: "int" })
+  public discount_in_cents: number;
 
   @CreateDateColumn({
     type: "timestamp",

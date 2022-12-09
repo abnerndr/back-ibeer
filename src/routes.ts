@@ -17,7 +17,7 @@ routes.delete("/customer/profile/:id", new UserController().destroy);
 
 // company_user
 routes.post("/company/user", new CompanyController().store);
-routes.post("/company/login", new AuthCompanyController().login);
+routes.post("/company/login", new AuthController().login);
 routes.get("/company/profile", new CompanyController().index);
 routes.get("/company/profile/:id", new CompanyController().show);
 routes.put("/company/profile/:id", new CompanyController().update);
