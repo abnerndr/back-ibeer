@@ -1,19 +1,25 @@
-import { Products } from "./Products";
 import {
   Column,
   CreateDateColumn,
   Entity,
   Generated,
+  JoinColumn,
   JoinTable,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Product } from "./Product";
 
 @Entity("companies")
 export class Company {
   @PrimaryGeneratedColumn()
-  @Generated("uuid")
+  company_id: number
+
+  @Column()
+  @Generated('uuid')
   public id: string;
 
   @Column({ type: "text" })
@@ -22,7 +28,8 @@ export class Company {
   @Column({ type: "text", unique: true })
   public email: string;
 
-  @Column({ type: "text", select: false })
+  // @Column({ type: "text", select: false })
+  @Column({ type: "text" })
   public password: string;
 
   @Column({ type: "text", unique: true })
@@ -34,12 +41,13 @@ export class Company {
   @Column({ type: "text" })
   public description: string;
 
-  @ManyToOne(() => Products)
-  @JoinTable()
-  public products: Products[];
+  // @OneToMany(() => Product, product => product.company,
+  //   { cascade: true, eager: true })
+  @OneToMany(() => Product, product => product.company)
+  products: Product[]
 
-  @Column({ type: "text" })
-  public roles: string[3];
+  @Column({ type: 'simple-array' })
+  public roles: string[];
 
   @CreateDateColumn({
     type: "timestamp",

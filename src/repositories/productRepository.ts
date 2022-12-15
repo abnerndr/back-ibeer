@@ -1,4 +1,4 @@
 import { AppDataSource } from "../data-source";
-import { Products } from "../entities/Products";
+import { Product } from "../entities/Product";
 
-export const productRespository = AppDataSource.getRepository(Products);
+export const productRespository: any = AppDataSource.getRepository(Product);
