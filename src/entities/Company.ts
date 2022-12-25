@@ -2,25 +2,24 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Generated,
   JoinColumn,
-  JoinTable,
-  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Product } from "./Product";
+import { Subscription } from "./Subscription";
+import { Wallet } from "./Wallet";
 
 @Entity("companies")
 export class Company {
-  @PrimaryGeneratedColumn()
-  company_id: number
 
-  @Column()
-  @Generated('uuid')
+  @PrimaryGeneratedColumn('uuid')
   public id: string;
+
+  @Column({ type: 'uuid', nullable: true })
+  public company_id?: string
 
   @Column({ type: "text" })
   public name: string;
@@ -28,7 +27,6 @@ export class Company {
   @Column({ type: "text", unique: true })
   public email: string;
 
-  // @Column({ type: "text", select: false })
   @Column({ type: "text" })
   public password: string;
 
@@ -41,10 +39,17 @@ export class Company {
   @Column({ type: "text" })
   public description: string;
 
-  // @OneToMany(() => Product, product => product.company,
-  //   { cascade: true, eager: true })
-  @OneToMany(() => Product, product => product.company)
-  products: Product[]
+
+  @OneToMany('Product', (product: Product) => product.company, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  public products: Array<Product>
+
+  // @OneToOne('Subscription', (subscription: Subscription) => subscription.company)
+  // @JoinColumn({ name: 'subscription_id' })
+  // public subscription: Subscription
+
+  // @OneToOne('Wallet', (wallet: Wallet) => wallet.company)
+  // @JoinColumn({ name: 'wallet_id' })
+  // public wallet: Wallet
 
   @Column({ type: 'simple-array' })
   public roles: string[];

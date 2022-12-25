@@ -1,19 +1,18 @@
 import {
-  AfterLoad,
-  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
-  Generated,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 @Entity("users")
 export class User {
-  @PrimaryGeneratedColumn()
-  @Generated("uuid")
+  @PrimaryGeneratedColumn('uuid')
   public id: string;
+
+  @Column({ type: 'uuid', nullable: true })
+  public user_id: string;
 
   @Column({ type: "text" })
   public name: string;
@@ -45,17 +44,4 @@ export class User {
     onUpdate: "CURRENT_TIMESTAMP(6)",
   })
   public updated_at: Date;
-
-  //   @AfterLoad()
-  //   private loadTempPassword(): void {
-  //     this.password = this.password;
-  //   }
-
-  //   @BeforeUpdate()
-  //   private encryptPassword(): void {
-  //     if (this.password !== this.password) {
-  //       this.password = this.password;
-  //       this.loadTempPassword();
-  //     }
-  //   }
 }

@@ -3,7 +3,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    Generated,
+    JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
@@ -11,13 +11,15 @@ import {
 
 @Entity("products")
 export class Product {
-    @PrimaryGeneratedColumn()
-    @Generated("uuid")
+    @PrimaryGeneratedColumn('uuid')
     public id: string;
 
+    @Column({ type: 'uuid', nullable: true })
+    public product_id?: string;
 
-    @ManyToOne(() => Company, company => company.products)
-    company: Company
+    @ManyToOne(() => Company, (company: Company) => company.products)
+    @JoinColumn({ name: 'company_id' })
+    public company: Company
 
     @Column({ type: "text" })
     public product_name: string;
@@ -25,18 +27,20 @@ export class Product {
     @Column({ type: "text" })
     public description?: string;
 
-    @Column({ type: "text" })
+    @Column({ type: "text", nullable: true })
     public photo_url?: string;
 
     @Column({ type: "simple-array" })
     public categories: string[];
 
-
     @Column({ type: "int" })
     public price_in_cents: number;
 
     @Column({ type: "int" })
-    public discount_in_cents?: number;
+    public ibeer_taxe_in_cents: number;
+
+    @Column({ type: "int" })
+    public discount_in_percent: number;
 
     @CreateDateColumn({
         type: "timestamp",

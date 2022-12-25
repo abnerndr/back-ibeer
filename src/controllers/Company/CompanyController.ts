@@ -33,14 +33,15 @@ export class CompanyController {
     return res.status(201).json({ company });
   }
 
-  async index(req: Request, res: Response) {
-    const company = await companyRespository.find({
+  async index(res: Response, req: Request) {
+    const companies = await companyRespository.find({
       relations: {
-        products: true
+        products: true,
       }
     });
-    await company.map((companie: Company | null) => delete companie?.password)
-    return res.json({ companies: company });
+    await companies.map((company: Company | null) => delete company?.password)
+    console.log(companies)
+    return res.json(companies);
   }
 
   async show(req: Request, res: Response) {

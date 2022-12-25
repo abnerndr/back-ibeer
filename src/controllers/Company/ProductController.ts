@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import { Company } from "../../entities/Company";
-import { Product } from "../../entities/Product";
 import { BadRequestError } from "../../helpers/api-erros";
 import { companyRespository } from "../../repositories/companyRespository";
 import { productRespository } from "../../repositories/productRepository";
@@ -19,48 +17,35 @@ export class ProductController {
         }
 
         delete company.password
-        // delete company.company_id
 
-
-
-        let products: Product[] = [
-        ]
-
-        const product: any = {
+        const product = await productRespository.create({
             product_name,
             description,
             photo_url,
             categories,
             price_in_cents,
             discount_in_cents,
-            company_id: 1,
-            // companyCompanyId: 1,
-            companyId: 1
+            company
+        })
+
+
+        if (!price_in_cents || price_in_cents < 0) {
+            return res.status(404).json({
+                errors: [
+                    {
+                        message: 'Valor do produto não informado ou não é valido.',
+                    },
+                ],
+            })
         }
 
-        products.push(product)
 
-        let companie: Company = new Company()
-        companie = company
-        companie.products = products
-
-
-
-        // const { ...product } = newProduct;
-        // delete product.company.company_id
-        // console.log(companie, 'companie')
-        await productRespository.save(products)
-        await companyRespository.save(companie)
-
-        return res.json({ products: companie.products })
+        await productRespository.save(product)
+        return res.status(201).json(product)
 
     }
 
-    async index(req: Request, res: Response) {
-        // const { company_id } = req.params
-        // const products: any = await productRespository.findOne({ where: { id: company_id } });
-        // console.log(products, 'product')
-        // return res.json({ products });
+    async index(res: Response) {
         const products: any = await productRespository.find()
         return res.json({ products })
     }
@@ -84,10 +69,48 @@ export class ProductController {
     }
 
     async update(req: Request, res: Response) {
+        const { product_name, description, photo_url, categories, price_in_cents, discount_in_cents } = req.body
+        const { product_id }: any = req.params
 
+
+        if (!product_id) {
+            throw new BadRequestError('id do produto não consta na base de dados')
+        }
+
+
+        const product: any = await productRespository.findOne({
+            where: { id: product_id },
+        });
+
+        if (!product) {
+            throw new BadRequestError('produto não encontrado')
+        }
+
+        const updatedProduct = await productRespository.merge(product, {
+            product_name,
+            description,
+            photo_url,
+            categories,
+            price_in_cents,
+            discount_in_cents,
+        });
+
+        const result = await productRespository.save(updatedProduct);
+        return res.json({ product: result });
     }
 
     async destroy(req: Request, res: Response) {
-
+        const { product_id }: any = req.params
+        if (!product_id) {
+            throw new BadRequestError('id do produto não consta na base de dados')
+        }
+        if (product_id) {
+            await productRespository.delete({ id: product_id });
+            return res
+                .status(201)
+                .json({ error: "produto retirado da lista" });
+        }
+        return res.status(400).json({ error: "não foi possivel excluir o produto" });
     }
+
 }

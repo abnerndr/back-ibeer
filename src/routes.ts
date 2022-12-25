@@ -31,6 +31,7 @@ routes.delete("/company/profile/:id", new CompanyController().destroy);
 routes.post("/company/new-product/:company_id", new ProductController().create);
 routes.get("/company/products", new ProductController().index);
 routes.get("/company/products/:company_id", new ProductController().show);
+routes.put("/company/products/:product_id", new ProductController().update);
 
 routes.use(authMiddleware);
 

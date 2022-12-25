@@ -3,6 +3,7 @@ import { BadRequestError } from "../../helpers/api-erros";
 import { userRepository } from "../../repositories/userRepository";
 import bcrypt from "bcrypt";
 export class UserController {
+
   async store(req: Request, res: Response) {
     const { name, email, password } = req.body;
 
@@ -27,7 +28,7 @@ export class UserController {
     return res.status(201).json({ user });
   }
 
-  async index(req: Request, res: Response) {
+  async index(res: Response) {
     const user = await userRepository.find();
     return res.json({ user });
   }
