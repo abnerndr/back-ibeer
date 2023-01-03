@@ -8,10 +8,10 @@ import {
 
 @Entity("users")
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   public id: string;
 
-  @Column({ type: 'uuid', nullable: true })
+  @Column({ type: "uuid", nullable: true })
   public user_id: string;
 
   @Column({ type: "text" })
@@ -20,7 +20,7 @@ export class User {
   @Column({ type: "text", unique: true })
   public email: string;
 
-  @Column({ type: "text", select: false })
+  @Column({ type: "text" })
   public password: string;
 
   @Column({ type: "text", unique: true })
@@ -29,8 +29,8 @@ export class User {
   @Column({ type: "text" })
   public cellphone: string;
 
-  @Column({ type: "text" })
-  public roles: string[3];
+  @Column({ type: "simple-array" })
+  public roles: [];
 
   @CreateDateColumn({
     type: "timestamp",

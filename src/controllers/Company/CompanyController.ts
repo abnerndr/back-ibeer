@@ -2,11 +2,23 @@ import { Request, Response } from "express";
 import { BadRequestError } from "../../helpers/api-erros";
 import { companyRespository } from "../../repositories/companyRespository";
 import bcrypt from "bcrypt";
-import { Company } from '../../@types/company'
+import { Company } from "../../@types/company";
+import "dotenv";
+
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 export class CompanyController {
   async store(req: Request, res: Response) {
-    const { name, email, password, document, cellphone, description, roles } = req.body;
+    const {
+      company_name,
+      user_name,
+      email,
+      password,
+      document,
+      cellphone,
+      description,
+      roles,
+    } = req.body;
 
     const userExists = await companyRespository.findOneBy({ email });
 
@@ -17,7 +29,8 @@ export class CompanyController {
     const hashPassword = await bcrypt.hash(password, 10);
 
     const newCompany = companyRespository.create({
-      name,
+      company_name,
+      user_name,
       email,
       password: hashPassword,
       document,
@@ -26,6 +39,8 @@ export class CompanyController {
       roles,
     });
 
+    console.log("newCompany", newCompany);
+
     await companyRespository.save(newCompany);
 
     const { password: _, ...company } = newCompany;
@@ -33,26 +48,25 @@ export class CompanyController {
     return res.status(201).json({ company });
   }
 
-  async index(res: Response, req: Request) {
+  async getCompanies(req: Request, res: Response) {
     const companies = await companyRespository.find({
       relations: {
         products: true,
-      }
+      },
     });
-    await companies.map((company: Company | null) => delete company?.password)
-    console.log(companies)
+    await companies.map((company: any) => delete company?.password);
     return res.json(companies);
   }
 
   async show(req: Request, res: Response) {
     if (req.params.id) {
-      const company: Company | null = await companyRespository.findOne({
+      const company: any = await companyRespository.findOne({
         relations: {
-          products: true
+          products: true,
         },
         where: { id: req.params.id },
       });
-      await delete company?.password
+      await delete company?.password;
       return res.json({ company });
     }
     return res.status(400).json({ error: "lista de usuários não encontrado" });
@@ -65,7 +79,7 @@ export class CompanyController {
       });
       await companyRespository.merge(company, req.body);
       const result = await companyRespository.save(company);
-      delete result.password
+      delete result.password;
       return res.json({ company: result });
     }
 

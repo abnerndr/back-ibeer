@@ -8,21 +8,28 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Address } from "./Address";
 import { Product } from "./Product";
-import { Subscription } from "./Subscription";
-import { Wallet } from "./Wallet";
 
 @Entity("companies")
 export class Company {
-
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   public id: string;
 
-  @Column({ type: 'uuid', nullable: true })
-  public company_id?: string
+  @Column({ type: "uuid", nullable: true })
+  public company_id?: string;
+
+  @Column({ type: "simple-json", default: {}, nullable: true })
+  public stripe_customer: {};
+
+  @Column({ type: "simple-json", default: {}, nullable: true })
+  public stripe_subscription: {};
 
   @Column({ type: "text" })
-  public name: string;
+  public company_name: string;
+
+  @Column({ type: "text" })
+  public user_name: string;
 
   @Column({ type: "text", unique: true })
   public email: string;
@@ -39,19 +46,13 @@ export class Company {
   @Column({ type: "text" })
   public description: string;
 
+  @OneToMany("Product", (product: Product) => product.company, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  public products: Array<Product>;
 
-  @OneToMany('Product', (product: Product) => product.company, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  public products: Array<Product>
-
-  // @OneToOne('Subscription', (subscription: Subscription) => subscription.company)
-  // @JoinColumn({ name: 'subscription_id' })
-  // public subscription: Subscription
-
-  // @OneToOne('Wallet', (wallet: Wallet) => wallet.company)
-  // @JoinColumn({ name: 'wallet_id' })
-  // public wallet: Wallet
-
-  @Column({ type: 'simple-array' })
+  @Column({ type: "simple-array" })
   public roles: string[];
 
   @CreateDateColumn({

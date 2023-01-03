@@ -10,6 +10,10 @@ export class AuthCompanyController {
 
     const company_user = await companyRespository.findOneBy({ email });
 
+    if (!company_user?.stripe_customer && !company_user?.stripe_subscription) {
+      throw new BadRequestError("assinatura inválida");
+    }
+
     if (!company_user) {
       throw new BadRequestError("E-mail ou senha inválidos");
     }
