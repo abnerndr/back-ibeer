@@ -20,6 +20,9 @@ routes.get("/customer/profile/:id", new UserController().show);
 routes.put("/customer/profile/:id", new UserController().update);
 routes.delete("/customer/profile/:id", new UserController().destroy);
 
+routes.post("/company/forgot-password", new AuthController().forgot);
+routes.post("/company/reset-password", new AuthController().reset);
+
 // company_user
 routes.post("/company/user", new CompanyController().store);
 routes.post("/company/login", new AuthCompanyController().login);
@@ -28,9 +31,12 @@ routes.get("/company/profile/:id", new CompanyController().show);
 routes.put("/company/profile/:id", new CompanyController().update);
 routes.delete("/company/profile/:id", new CompanyController().destroy);
 
+routes.post("/company/forgot-password", new AuthCompanyController().forgot);
+routes.post("/company/reset-password", new AuthCompanyController().reset);
+
 // products
 routes.post("/company/new-product/:company_id", new ProductController().create);
-routes.get("/company/products", new ProductController().index);
+routes.get("/company/products", new ProductController().getProducts);
 routes.get("/company/products/:company_id", new ProductController().show);
 routes.put("/company/products/:product_id", new ProductController().update);
 

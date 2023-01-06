@@ -19,8 +19,6 @@ export class ProductController {
     const company: any = await companyRespository.findOne({
       where: { id: company_id },
     });
-    console.log("company_id", company_id);
-    console.log("company", company);
 
     if (!company) {
       throw new BadRequestError("empresa não encontrada");
@@ -52,9 +50,9 @@ export class ProductController {
     return res.status(201).json(product);
   }
 
-  async index(res: Response) {
-    const products: any = await productRespository.find();
-    return res.json({ products });
+  async getProducts(req: Request, res: Response) {
+    const proucts = await productRespository.find();
+    return res.json({ proucts });
   }
 
   async show(req: Request, res: Response) {

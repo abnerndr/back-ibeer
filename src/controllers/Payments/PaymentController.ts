@@ -30,18 +30,18 @@ export class PaymentController {
       res.status(400).json({ message: "id não informado" });
     }
 
-    const paymentMethod = await stripe.paymentMethods.create({
-      type: "card",
-      card: {
-        number: card_number,
-        exp_month,
-        exp_year,
-        cvc,
-      },
-    });
+    // const paymentMethod = await stripe.paymentMethods.create({
+    //   type: "card",
+    //   card: {
+    //     number: card_number,
+    //     exp_month,
+    //     exp_year,
+    //     cvc,
+    //   },
+    // });
 
     const customer = await stripe.customers.create({
-      payment_method: paymentMethod.id,
+      // payment_method: paymentMethod.id,
       email: company.email,
       name: company.user_name,
       phone: company.cellphone,
@@ -67,11 +67,8 @@ export class PaymentController {
     const customerId = customer.id;
     const priceId = "price_1MMAeBChb5pCbrxpDAWPG2jT";
 
-    console.log("customerId", customer.id);
-    console.log("priceId", priceId);
-
     const subscription = await stripe.subscriptions.create({
-      default_payment_method: paymentMethod.id,
+      // default_payment_method: paymentMethod.id,
       customer: customerId,
       items: [
         {
@@ -96,10 +93,15 @@ export class PaymentController {
       stripe_customer: customer,
     });
 
-    console.log(newCompany);
-
     await companyRespository.save(newCompany);
 
-    return res.status(201).json({ subscription });
+    console.log(subscription.latest_invoice.hosted_invoice_url);
+
+    const data = {
+      subscription,
+      payment_link: subscription.latest_invoice.hosted_invoice_url,
+    };
+
+    return res.status(201).json({ data });
   }
 }

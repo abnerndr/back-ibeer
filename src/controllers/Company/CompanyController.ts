@@ -5,8 +5,6 @@ import bcrypt from "bcrypt";
 import { Company } from "../../@types/company";
 import "dotenv";
 
-const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
-
 export class CompanyController {
   async store(req: Request, res: Response) {
     const {
@@ -39,8 +37,6 @@ export class CompanyController {
       roles,
     });
 
-    console.log("newCompany", newCompany);
-
     await companyRespository.save(newCompany);
 
     const { password: _, ...company } = newCompany;
@@ -49,11 +45,12 @@ export class CompanyController {
   }
 
   async getCompanies(req: Request, res: Response) {
-    const companies = await companyRespository.find({
+    const companies: Company | any = await companyRespository.find({
       relations: {
         products: true,
       },
     });
+
     await companies.map((company: any) => delete company?.password);
     return res.json(companies);
   }
@@ -77,13 +74,18 @@ export class CompanyController {
       const company: any = await companyRespository.findOne({
         where: { id: req.params.id },
       });
-      await companyRespository.merge(company, req.body);
-      const result = await companyRespository.save(company);
-      delete result.password;
-      return res.json({ company: result });
-    }
+      if (!company?.stripe_customer && !company?.stripe_subscription) {
+        await companyRespository.merge(company, req.body);
+        const result = await companyRespository.save(company);
+        delete result.password;
+        return res.json({ company: result });
+      }
 
-    return res.status(400).json({ error: "id não encontrado" });
+      return res
+        .status(400)
+        .json({ error: "finalize a assinatura para exibir" });
+    }
+    return res.status(400).json({ ßerror: "id não encontrado" });
   }
 
   async destroy(req: Request, res: Response) {

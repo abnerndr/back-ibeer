@@ -8,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Address } from "./Address";
 import { Product } from "./Product";
 
 @Entity("companies")

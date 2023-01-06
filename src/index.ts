@@ -14,7 +14,7 @@ AppDataSource.initialize().then(() => {
 
   app.use(express.urlencoded({ extended: true }));
 
-  app.use(routes);
+  app.use("/api/v1", routes);
 
   app.use(errorMiddleware);
   console.log(`running in localhost:${process.env.PORT}`);
