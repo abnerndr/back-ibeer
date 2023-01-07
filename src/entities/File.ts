@@ -2,27 +2,28 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Company } from "./Company";
+import { Product } from "./Product";
 
-@Entity("wallet")
-export class Wallet {
+@Entity("files")
+export class File {
   @PrimaryGeneratedColumn("uuid")
   public id: string;
 
-  @Column({ type: "int", default: 0 })
-  public account_receipt_amount: number;
+  @Column({ type: "text" })
+  public url: string;
 
-  @Column({ type: "int", default: 0 })
-  public withdrawn_amount: number;
+  @Column({ type: "text" })
+  public name: string;
 
-  @OneToOne(() => Company, (company: Company) => company.wallet)
-  @JoinColumn({ name: "company_id" })
-  public company: Company;
+  @Column({ type: "text" })
+  public path: string;
+
+  @OneToOne(() => Product, (product: Product) => product.photo)
+  public product: Product;
 
   @CreateDateColumn({
     type: "timestamp",

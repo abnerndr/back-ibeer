@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Product } from "./Product";
+import { Wallet } from "./Wallet";
 
 @Entity("companies")
 export class Company {
@@ -50,6 +51,12 @@ export class Company {
     onUpdate: "CASCADE",
   })
   public products: Array<Product>;
+
+  @OneToOne("Wallet", (wallet: Wallet) => wallet.company, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  public wallet: Wallet;
 
   @Column({ type: "simple-array" })
   public roles: string[];

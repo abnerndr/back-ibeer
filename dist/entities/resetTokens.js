@@ -9,49 +9,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Subscription = void 0;
+exports.ResetTokens = void 0;
 const typeorm_1 = require("typeorm");
-let Subscription = class Subscription {
+let ResetTokens = class ResetTokens {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
-], Subscription.prototype, "id", void 0);
+], ResetTokens.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'uuid', nullable: true }),
+    (0, typeorm_1.Column)({ type: "text" }),
     __metadata("design:type", String)
-], Subscription.prototype, "subscription_id", void 0);
+], ResetTokens.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "text" }),
     __metadata("design:type", String)
-], Subscription.prototype, "name", void 0);
+], ResetTokens.prototype, "token", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Subscription.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "int", default: 0 }),
     __metadata("design:type", Number)
-], Subscription.prototype, "amount", void 0);
+], ResetTokens.prototype, "used", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Subscription.prototype, "status", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Boolean)
-], Subscription.prototype, "is_active", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'simple-json' }),
-    __metadata("design:type", Object)
-], Subscription.prototype, "address", void 0);
+    (0, typeorm_1.Column)({
+        type: "timestamp",
+        nullable: true,
+    }),
+    __metadata("design:type", Date)
+], ResetTokens.prototype, "expiration", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         type: "timestamp",
         default: () => "CURRENT_TIMESTAMP(6)",
     }),
     __metadata("design:type", Date)
-], Subscription.prototype, "created_at", void 0);
+], ResetTokens.prototype, "created_at", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         type: "timestamp",
@@ -59,8 +50,8 @@ __decorate([
         onUpdate: "CURRENT_TIMESTAMP(6)",
     }),
     __metadata("design:type", Date)
-], Subscription.prototype, "updated_at", void 0);
-Subscription = __decorate([
-    (0, typeorm_1.Entity)('subscriptions')
-], Subscription);
-exports.Subscription = Subscription;
+], ResetTokens.prototype, "updated_at", void 0);
+ResetTokens = __decorate([
+    (0, typeorm_1.Entity)("reset_tokens")
+], ResetTokens);
+exports.ResetTokens = ResetTokens;

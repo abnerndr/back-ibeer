@@ -16,6 +16,8 @@ routes.get("/customer/profile", new UserController_1.UserController().index);
 routes.get("/customer/profile/:id", new UserController_1.UserController().show);
 routes.put("/customer/profile/:id", new UserController_1.UserController().update);
 routes.delete("/customer/profile/:id", new UserController_1.UserController().destroy);
+routes.post("/company/forgot-password", new AuthController_1.AuthController().forgot);
+routes.post("/company/reset-password", new AuthController_1.AuthController().reset);
 // company_user
 routes.post("/company/user", new CompanyController_1.CompanyController().store);
 routes.post("/company/login", new AuthCompanyController_1.AuthCompanyController().login);
@@ -23,12 +25,14 @@ routes.get("/company/profile", new CompanyController_1.CompanyController().getCo
 routes.get("/company/profile/:id", new CompanyController_1.CompanyController().show);
 routes.put("/company/profile/:id", new CompanyController_1.CompanyController().update);
 routes.delete("/company/profile/:id", new CompanyController_1.CompanyController().destroy);
+routes.post("/company/forgot-password", new AuthCompanyController_1.AuthCompanyController().forgot);
+routes.post("/company/reset-password", new AuthCompanyController_1.AuthCompanyController().reset);
 // products
 routes.post("/company/new-product/:company_id", new ProductController_1.ProductController().create);
-routes.get("/company/products", new ProductController_1.ProductController().index);
+routes.get("/company/products", new ProductController_1.ProductController().getProducts);
 routes.get("/company/products/:company_id", new ProductController_1.ProductController().show);
 routes.put("/company/products/:product_id", new ProductController_1.ProductController().update);
 // payments (stripe)
-routes.post("/create-checkout", new PaymentController_1.PaymentController().createCheckout);
+routes.post("/payment/subscription/:company_id", new PaymentController_1.PaymentController().create_subscription);
 routes.use(authMiddleware_1.authMiddleware);
 exports.default = routes;

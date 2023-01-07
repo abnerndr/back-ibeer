@@ -22,17 +22,21 @@ __decorate([
     __metadata("design:type", String)
 ], Company.prototype, "company_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "simple-json" }),
+    (0, typeorm_1.Column)({ type: "simple-json", default: {}, nullable: true }),
     __metadata("design:type", Object)
 ], Company.prototype, "stripe_customer", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "simple-json" }),
+    (0, typeorm_1.Column)({ type: "simple-json", default: {}, nullable: true }),
     __metadata("design:type", Object)
 ], Company.prototype, "stripe_subscription", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: "text" }),
     __metadata("design:type", String)
-], Company.prototype, "name", void 0);
+], Company.prototype, "company_name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "text" }),
+    __metadata("design:type", String)
+], Company.prototype, "user_name", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: "text", unique: true }),
     __metadata("design:type", String)

@@ -11,8 +11,6 @@ class ProductController {
         const company = await companyRespository_1.companyRespository.findOne({
             where: { id: company_id },
         });
-        console.log("company_id", company_id);
-        console.log("company", company);
         if (!company) {
             throw new api_erros_1.BadRequestError("empresa não encontrada");
         }
@@ -39,9 +37,9 @@ class ProductController {
         await productRepository_1.productRespository.save(product);
         return res.status(201).json(product);
     }
-    async index(res) {
-        const products = await productRepository_1.productRespository.find();
-        return res.json({ products });
+    async getProducts(req, res) {
+        const proucts = await productRepository_1.productRespository.find();
+        return res.json({ proucts });
     }
     async show(req, res) {
         const { company_id } = req.params;

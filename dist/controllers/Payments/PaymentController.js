@@ -3,46 +3,54 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentController = void 0;
 require("dotenv");
 const companyRespository_1 = require("../../repositories/companyRespository");
-const stripe = require("stripe")("sk_test_51MKYyBChb5pCbrxpf8ZAK3FyvUp09rCVp6EL62X3vCoLhiYIkGRSW7HT7GN4WwSYwivGFyLnNSi3yg84XK0QnF9n00tdmiD1vW");
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 class PaymentController {
-    async createCheckout(req, res) {
-        const prices = await stripe.prices.list({
-            lookup_keys: [req.body.lookup_key],
-            expand: ["data.product"],
-        });
-        console.log(prices, "prices");
-        const session = await stripe.checkout.sessions.create({
-            billing_address_collection: "auto",
-            line_items: [
-                {
-                    price: prices.data[0].id,
-                    // For metered billing, do not pass quantity
-                    quantity: 1,
-                },
-            ],
-            mode: "subscription",
-            success_url: `http://localhost:3333/?success=true&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `http://localhost:3333/?canceled=true`,
-        });
-        console.log(session, "session");
-        return res.json(session);
-        // res.redirect(303, session.url);
-    }
-    async createSubscription(req, res) {
-        var _a;
+    async create_subscription(req, res) {
         const { company_id } = req.params;
-        const { amount, interval = "month" || "year", product_name } = req.body;
-        const company = companyRespository_1.companyRespository.findOneBy({ id: company_id });
-        const price = await stripe.prices.create({
-            unit_amount: amount,
-            currency: "brl",
-            recurring: { interval: interval },
-            product: product_name,
+        const { full_name, card_number, exp_month, exp_year, cvc, street, street_number, zip_code, state, city, country, } = req.body;
+        const company = await companyRespository_1.companyRespository.findOne({
+            where: { id: company_id },
         });
-        const customerId = (_a = company === null || company === void 0 ? void 0 : company.stripe_customer) === null || _a === void 0 ? void 0 : _a.id;
-        const priceId = price.id;
+        if (!company_id) {
+            res.status(400).json({ message: "id não informado" });
+        }
+        // const paymentMethod = await stripe.paymentMethods.create({
+        //   type: "card",
+        //   card: {
+        //     number: card_number,
+        //     exp_month,
+        //     exp_year,
+        //     cvc,
+        //   },
+        // });
+        const customer = await stripe.customers.create({
+            // payment_method: paymentMethod.id,
+            email: company.email,
+            name: company.user_name,
+            phone: company.cellphone,
+            shipping: {
+                address: {
+                    city: city,
+                    country: country,
+                    line1: `${street_number}, ${street}`,
+                    postal_code: zip_code,
+                    state: state,
+                },
+                name: full_name,
+            },
+            address: {
+                city: city,
+                country: country,
+                line1: `${street_number}, ${street}`,
+                postal_code: zip_code,
+                state: state,
+            },
+        });
+        const customerId = customer.id;
+        const priceId = "price_1MMAeBChb5pCbrxpDAWPG2jT";
         const subscription = await stripe.subscriptions.create({
+            // default_payment_method: paymentMethod.id,
             customer: customerId,
             items: [
                 {
@@ -56,12 +64,20 @@ class PaymentController {
         if (!subscription) {
             res.status(400).json({ message: "erro na criacao da assinatura" });
         }
-        const newCompany = await companyRespository_1.companyRespository.create({
+        company.stripe_subscription = subscription;
+        company.stripe_customer = customer;
+        const newCompany = await companyRespository_1.companyRespository.merge({
             ...company,
             stripe_subscription: subscription,
+            stripe_customer: customer,
         });
         await companyRespository_1.companyRespository.save(newCompany);
-        return res.status(201).json(subscription);
+        console.log(subscription.latest_invoice.hosted_invoice_url);
+        const data = {
+            subscription,
+            payment_link: subscription.latest_invoice.hosted_invoice_url,
+        };
+        return res.status(201).json({ data });
     }
 }
 exports.PaymentController = PaymentController;

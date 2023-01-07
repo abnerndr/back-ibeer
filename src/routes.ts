@@ -9,6 +9,8 @@ import { UserController } from "./controllers/Customer/UserController";
 import { AuthController } from "./controllers/Customer/AuthController";
 import { authMiddleware } from "./middlewares/authMiddleware";
 import { PaymentController } from "./controllers/Payments/PaymentController";
+import { OrderController } from "./controllers/Payments/OrderController";
+import { WalletController } from "./controllers/Company/WalletController";
 
 const routes = Router();
 
@@ -34,6 +36,9 @@ routes.delete("/company/profile/:id", new CompanyController().destroy);
 routes.post("/company/forgot-password", new AuthCompanyController().forgot);
 routes.post("/company/reset-password", new AuthCompanyController().reset);
 
+// wallet
+routes.get("/company/wallet/:company_id", new WalletController().show);
+
 // products
 routes.post("/company/new-product/:company_id", new ProductController().create);
 routes.get("/company/products", new ProductController().getProducts);
@@ -45,6 +50,9 @@ routes.post(
   "/payment/subscription/:company_id",
   new PaymentController().create_subscription
 );
+// order
+routes.post("/payment/order/:product_id", new OrderController().order);
+routes.get("/payment/order/:company_id", new OrderController().getOrders);
 
 routes.use(authMiddleware);
 

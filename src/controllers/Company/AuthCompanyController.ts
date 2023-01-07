@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   companyRespository,
   resetTokenRepository,
+  walletRespository,
 } from "../../repositories/companyRespository";
 import { BadRequestError } from "../../helpers/api-erros";
 import bcrypt from "bcrypt";
@@ -35,9 +36,22 @@ export class AuthCompanyController {
 
     const { password: _, ...userLogin } = company_user;
 
+    const newWallet = await walletRespository.create({
+      account_receipt_amount: 0,
+      withdrawn_amount: 0,
+      company: company_user,
+    });
+
+    console.log(newWallet);
+
+    const wallet = await walletRespository.save(newWallet);
+
+    console.log(wallet);
+
     return res.status(200).json({
       company: userLogin,
       token: token,
+      wallet: wallet,
     });
     // }
   }

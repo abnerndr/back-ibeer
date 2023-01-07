@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { BadRequestError } from "../../helpers/api-erros";
-import { companyRespository } from "../../repositories/companyRespository";
+import {
+  companyRespository,
+  walletRespository,
+} from "../../repositories/companyRespository";
 import bcrypt from "bcrypt";
 import { Company } from "../../@types/company";
 import "dotenv";
@@ -48,6 +51,7 @@ export class CompanyController {
     const companies: Company | any = await companyRespository.find({
       relations: {
         products: true,
+        wallet: true,
       },
     });
 
@@ -60,6 +64,7 @@ export class CompanyController {
       const company: any = await companyRespository.findOne({
         relations: {
           products: true,
+          wallet: true,
         },
         where: { id: req.params.id },
       });
