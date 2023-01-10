@@ -48,7 +48,11 @@ routes.put("/company/products/:product_id", new ProductController().update);
 // payments (stripe)
 routes.post(
   "/payment/subscription/:company_id",
-  new PaymentController().create_subscription
+  new PaymentController().storeSubscription
+);
+routes.get(
+  "/payment/subscription/:company_id",
+  new PaymentController().showSubscription
 );
 // order
 routes.post("/payment/order/:product_id", new OrderController().order);

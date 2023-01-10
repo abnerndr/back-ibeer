@@ -6,7 +6,7 @@ const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 export class PaymentController {
-  async create_subscription(req: Request, res: Response) {
+  async storeSubscription(req: Request, res: Response) {
     const { company_id } = req.params;
 
     const {
@@ -103,5 +103,27 @@ export class PaymentController {
     };
 
     return res.status(201).json({ data });
+  }
+
+  async showSubscription(req: Request, res: Response) {
+    const { company_id } = req.params;
+
+    const company: Company | any = await companyRespository.findOne({
+      where: { id: company_id },
+    });
+
+    if (!company) return res.json({ error: "empresa não encontrada" });
+
+    console.log(company.stripe_subscription.id);
+
+    try {
+      const subscription = await stripe.subscriptions.retrieve(
+        company.stripe_subscription.id
+      );
+
+      return res.json(subscription);
+    } catch (error) {
+      return res.json({ error });
+    }
   }
 }
