@@ -1,6 +1,6 @@
 {
-	"name": "api-autenticacao-jwt",
-	"version": "1.0.0",
+	"name": "back-ibeer",
+	"version": "16.19.0",
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
