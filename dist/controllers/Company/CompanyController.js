@@ -34,6 +34,7 @@ class CompanyController {
         const companies = await companyRespository_1.companyRespository.find({
             relations: {
                 products: true,
+                wallet: true,
             },
         });
         await companies.map((company) => company === null || company === void 0 ? true : delete company.password);
@@ -44,6 +45,7 @@ class CompanyController {
             const company = await companyRespository_1.companyRespository.findOne({
                 relations: {
                     products: true,
+                    wallet: true,
                 },
                 where: { id: req.params.id },
             });

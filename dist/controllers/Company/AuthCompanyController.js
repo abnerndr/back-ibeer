@@ -28,9 +28,18 @@ class AuthCompanyController {
         };
         const token = jsonwebtoken_1.default.sign(data, jwtSecretKey, { expiresIn: "8h" });
         const { password: _, ...userLogin } = company_user;
+        const newWallet = await companyRespository_1.walletRespository.create({
+            account_receipt_amount: 0,
+            withdrawn_amount: 0,
+            company: company_user,
+        });
+        console.log(newWallet);
+        const wallet = await companyRespository_1.walletRespository.save(newWallet);
+        console.log(wallet);
         return res.status(200).json({
             company: userLogin,
             token: token,
+            wallet: wallet,
         });
         // }
     }

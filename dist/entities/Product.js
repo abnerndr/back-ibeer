@@ -12,19 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const Company_1 = require("./Company");
 const typeorm_1 = require("typeorm");
+const File_1 = require("./File");
 let Product = class Product {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
 ], Product.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'uuid', nullable: true }),
+    (0, typeorm_1.Column)({ type: "uuid", nullable: true }),
     __metadata("design:type", String)
 ], Product.prototype, "product_id", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Company_1.Company, (company) => company.products),
-    (0, typeorm_1.JoinColumn)({ name: 'company_id' }),
+    (0, typeorm_1.JoinColumn)({ name: "company_id" }),
     __metadata("design:type", Company_1.Company)
 ], Product.prototype, "company", void 0);
 __decorate([
@@ -38,7 +39,11 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ type: "text", nullable: true }),
     __metadata("design:type", String)
-], Product.prototype, "photo_url", void 0);
+], Product.prototype, "photo_id", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => File_1.File),
+    __metadata("design:type", File_1.File)
+], Product.prototype, "photo", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: "simple-array" }),
     __metadata("design:type", Array)

@@ -9,35 +9,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Wallet = void 0;
+exports.File = void 0;
 const typeorm_1 = require("typeorm");
-const Company_1 = require("./Company");
-let Wallet = class Wallet {
+const Product_1 = require("./Product");
+let File = class File {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
-], Wallet.prototype, "id", void 0);
+], File.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "int", default: 0 }),
-    __metadata("design:type", Number)
-], Wallet.prototype, "account_receipt_amount", void 0);
+    (0, typeorm_1.Column)({ type: "text" }),
+    __metadata("design:type", String)
+], File.prototype, "url", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "int", default: 0 }),
-    __metadata("design:type", Number)
-], Wallet.prototype, "withdrawn_amount", void 0);
+    (0, typeorm_1.Column)({ type: "text" }),
+    __metadata("design:type", String)
+], File.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Company_1.Company, (company) => company.wallet),
-    (0, typeorm_1.JoinColumn)({ name: "company_id" }),
-    __metadata("design:type", Company_1.Company)
-], Wallet.prototype, "company", void 0);
+    (0, typeorm_1.Column)({ type: "text" }),
+    __metadata("design:type", String)
+], File.prototype, "path", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => Product_1.Product, (product) => product.photo),
+    __metadata("design:type", Product_1.Product)
+], File.prototype, "product", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         type: "timestamp",
         default: () => "CURRENT_TIMESTAMP(6)",
     }),
     __metadata("design:type", Date)
-], Wallet.prototype, "created_at", void 0);
+], File.prototype, "created_at", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         type: "timestamp",
@@ -45,8 +48,8 @@ __decorate([
         onUpdate: "CURRENT_TIMESTAMP(6)",
     }),
     __metadata("design:type", Date)
-], Wallet.prototype, "updated_at", void 0);
-Wallet = __decorate([
-    (0, typeorm_1.Entity)("wallet")
-], Wallet);
-exports.Wallet = Wallet;
+], File.prototype, "updated_at", void 0);
+File = __decorate([
+    (0, typeorm_1.Entity)("files")
+], File);
+exports.File = File;

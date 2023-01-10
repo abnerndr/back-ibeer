@@ -102,7 +102,7 @@ export class PaymentController {
       payment_link: subscription.latest_invoice.hosted_invoice_url,
     };
 
-    return res.status(201).json({ data });
+    return res.status(201).json(data);
   }
 
   async showSubscription(req: Request, res: Response) {
