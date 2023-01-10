@@ -1,8 +1,11 @@
 {
 	"name": "back-ibeer",
-	"version": "16.19.0",
+	"version": "1.0.0",
 	"main": "index.js",
 	"license": "MIT",
+	"engines": {
+		"node": "16.19.0"
+	  },
 	"scripts": {
 		"dev": "nodemon --exec ts-node ./src/index.ts",
 		"migration:generate": "typeorm-ts-node-commonjs -d ./src/data-source.ts migration:generate ./src/migrations/default",
