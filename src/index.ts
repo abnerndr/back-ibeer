@@ -3,7 +3,7 @@ import express from "express";
 import { AppDataSource } from "./data-source";
 import { errorMiddleware } from "./middlewares/error";
 import routes from "./routes";
-const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
+// const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 AppDataSource.initialize().then(() => {
   const app = express();
