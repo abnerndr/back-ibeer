@@ -1,6 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { Company } from "../entities/Company";
-import { ResetTokens } from "../entities/ResetTokens";
+import { ResetTokens } from "../entities/resetTokens";
 import { Wallet } from "../entities/Wallet";
 
 export const companyRespository = AppDataSource.getRepository(Company);
